@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/create"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:text="与 创建操作符 相关"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/change"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:text="与 变换操作符 相关"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/merge"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:text="与 组合/合并操作符 相关"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/function"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:text="与 功能性操作符 相关"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/filtration"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:text="与 过滤操作符 相关"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/mergeAndShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="合并数据源/同时展示"/>
+
+    <Button
+        android:id="@+id/uniteAndJudge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="联合判断"/>
+    <Button
+        android:id="@+id/obtainData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="获取缓存数据"/>
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/showMessage"
+        android:text="展示信息。。。。"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
