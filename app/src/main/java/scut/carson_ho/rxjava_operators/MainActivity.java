@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 使用场景：1.即用户在规定时间内多次触发该功能，仅会响应第一次触发操作
                 //          2.每当用户输入1个字符，显示与当前输入框内字符相关的搜索结果
                 startActivity(new Intent(this, FiltrationActivity.class));
+
                 break;
         }
     }
