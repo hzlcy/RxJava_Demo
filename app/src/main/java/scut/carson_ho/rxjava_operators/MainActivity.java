@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mMerge;
     private Button mFunction;
     private Button mFiltration;
+    private Button mGlide;
 
 
     @Override
@@ -37,17 +38,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMerge = (Button) findViewById(R.id.merge);
         mFunction = (Button) findViewById(R.id.function);
         mFiltration = (Button) findViewById(R.id.filtration);
+        mGlide = (Button) findViewById(R.id.glide);
 
         mCreate.setOnClickListener(this);
         mChange.setOnClickListener(this);
         mMerge.setOnClickListener(this);
         mFunction.setOnClickListener(this);
         mFiltration.setOnClickListener(this);
+        mGlide.setOnClickListener(this);
 
         Toast.makeText(this, new Crime().getmId() + "", Toast.LENGTH_LONG).show();
 
-        LinearLayout linearLayout = new LinearLayout(this);
-        RelativeLayout relativeLayout = new RelativeLayout(this);
+
+
     }
 
     @Override
@@ -80,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 使用场景：1.即用户在规定时间内多次触发该功能，仅会响应第一次触发操作
                 //          2.每当用户输入1个字符，显示与当前输入框内字符相关的搜索结果
                 startActivity(new Intent(this, FiltrationActivity.class));
+
+                break;
+            case R.id.glide:
+
 
                 break;
         }

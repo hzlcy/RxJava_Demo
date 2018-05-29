@@ -98,6 +98,9 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
                     // 作变换，即作嵌套网络请求
                     @Override
                     public ObservableSource<Translation2> apply(@NonNull Translation1 translation1) throws Exception {
+                        if (1 > 0) {
+                            return null;
+                        }
                         // 将网络请求1转换成网络请求2，即发送网络请求2
                         return observable2;
                     }
