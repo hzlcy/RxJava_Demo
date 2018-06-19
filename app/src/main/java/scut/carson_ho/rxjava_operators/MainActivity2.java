@@ -6,7 +6,11 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
@@ -20,6 +24,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
@@ -53,7 +59,7 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-//        method_do_2_1();
+        method_do_2_1();
 
 //        method_do_2_2();//Hot Observable 如何转变成 Cold Observable
 
@@ -82,8 +88,58 @@ public class MainActivity2 extends AppCompatActivity {
 //        method_6_5$takeUtil();
 //        method_6_5$takeWhile();
 
+//        method_10_1$binxing();
+
+//        method_10_1$binxing2();
 
 
+
+
+    }
+
+    private void method_10_1$binxing2() {
+        int threadNum = Runtime.getRuntime().availableProcessors() + 1;
+        ExecutorService executor = Executors.newFixedThreadPool(threadNum);
+        Scheduler scheduler = Schedulers.from(executor);
+        Observable.range(1,100).flatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(@NonNull Integer integer) throws Exception {
+                return Observable.just(integer).subscribeOn(scheduler).map(new Function<Integer, String>() {
+                    @Override
+                    public String apply(@NonNull Integer integer) throws Exception {
+                        return integer.toString();
+                    }
+                });
+            }
+        }).doFinally(new Action() {
+            @Override
+            public void run() throws Exception {
+                executor.shutdown();
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(@NonNull String s) throws Exception {
+                Log.i(TAG, "method_10_1$binxing2:" + s);
+            }
+        });
+    }
+
+    private void method_10_1$binxing() {
+        List<Integer> result = new ArrayList<>();
+        for (Integer i = 0; i < 50; i++) {
+            result.add(i);
+        }
+        result.parallelStream().map(new java.util.function.Function<Integer, String>() {
+            @Override
+            public String apply(Integer integer) {
+                return integer.toString();
+            }
+        }).forEach(new java.util.function.Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                Log.i(TAG, "method_10_1$binxing:" + s + ";当前线程名称" + Thread.currentThread().getName());
+            }
+        });
     }
 
     private void method_6_5$takeWhile() {
@@ -570,65 +626,138 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void method_do_2_1() {
-        Observable.just("hello")
-                .doOnNext(new Consumer<String>() {
-                    @Override
-                    public void accept(@NonNull String s) throws Exception {
-                        Log.i(TAG, "doOnNext-----" + s);
-                    }
-                })
-                .doAfterNext(new Consumer<String>() {
-                    @Override
-                    public void accept(@NonNull String s) throws Exception {
-                        Log.i(TAG, "doAfterNext-----" + s);
-                    }
-                })
-                .doOnComplete(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.i(TAG, "doOnComplete-----");
-                    }
-                })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        Log.i(TAG, "doOnSubscribe-----");
-                    }
-                })
-                .doAfterTerminate(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.i(TAG, "doAfterTerminate-----");
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.i(TAG, "doFinally-----");
-                    }
-                })
-                .doOnEach(new Consumer<Notification<String>>() {
-                    @Override
-                    public void accept(@NonNull Notification<String> stringNotification) throws Exception {
-                        Log.i(TAG, "doOnEach-----" + (stringNotification.isOnNext() ? "onNext" : stringNotification.isOnComplete() ? "onComplete" : "onError"));
-                    }
-                })
-                .doOnLifecycle(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        Log.i(TAG, "doOnLifecycle-----" + disposable.isDisposed());
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.i(TAG, "doOnLifecycle run-----");
-                    }
-                })
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(@NonNull String s) throws Exception {
-                        Log.i(TAG, "收到消息-----" + s);
-                    }
-                });
+//        Observable.just("hello")
+//                .doOnNext(new Consumer<String>() {
+//                    @Override
+//                    public void accept(@NonNull String s) throws Exception {
+//                        Log.i(TAG, "doOnNext-----" + s);
+//                    }
+//                })
+//                .doAfterNext(new Consumer<String>() {
+//                    @Override
+//                    public void accept(@NonNull String s) throws Exception {
+//                        Log.i(TAG, "doAfterNext-----" + s);
+//                    }
+//                })
+//                .doOnComplete(new Action() {
+//                    @Override
+//                    public void run() throws Exception {
+//                        Log.i(TAG, "doOnComplete-----");
+//                    }
+//                })
+//                .doOnSubscribe(new Consumer<Disposable>() {
+//                    @Override
+//                    public void accept(@NonNull Disposable disposable) throws Exception {
+//                        Log.i(TAG, "doOnSubscribe-----");
+//                    }
+//                })
+//                .doAfterTerminate(new Action() {
+//                    @Override
+//                    public void run() throws Exception {
+//                        Log.i(TAG, "doAfterTerminate-----");
+//                    }
+//                })
+//                .doFinally(new Action() {
+//                    @Override
+//                    public void run() throws Exception {
+//                        Log.i(TAG, "doFinally-----");
+//                    }
+//                })
+//                .doOnEach(new Consumer<Notification<String>>() {
+//                    @Override
+//                    public void accept(@NonNull Notification<String> stringNotification) throws Exception {
+//                        Log.i(TAG, "doOnEach-----" + (stringNotification.isOnNext() ? "onNext" : stringNotification.isOnComplete() ? "onComplete" : "onError"));
+//                    }
+//                })
+//                .doOnLifecycle(new Consumer<Disposable>() {
+//                    @Override
+//                    public void accept(@NonNull Disposable disposable) throws Exception {
+//                        Log.i(TAG, "doOnLifecycle-----" + disposable.isDisposed());
+//                    }
+//                }, new Action() {
+//                    @Override
+//                    public void run() throws Exception {
+//                        Log.i(TAG, "doOnLifecycle run-----");
+//                    }
+//                })
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(@NonNull String s) throws Exception {
+//                        Log.i(TAG, "收到消息-----" + s);
+//                    }
+//                });
+
+        Observable.just("Hello Word").subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+//        Observable.just("Hello Word").subscribe(new Consumer<String>() {
+//            @Override
+//            public void accept(@NonNull String s) throws Exception {
+//
+//            }
+//        }, new Consumer<Throwable>() {
+//            @Override
+//            public void accept(@NonNull Throwable throwable) throws Exception {
+//
+//            }
+//        }, new Action() {
+//            @Override
+//            public void run() throws Exception {
+//
+//            }
+//        }, new Consumer<Disposable>() {
+//            @Override
+//            public void accept(@NonNull Disposable disposable) throws Exception {
+//
+//            }
+//        });
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
