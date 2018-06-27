@@ -24,12 +24,14 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.BiConsumer;
@@ -38,6 +40,7 @@ import io.reactivex.functions.BooleanSupplier;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.internal.schedulers.SingleScheduler;
 import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
@@ -59,7 +62,7 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        method_do_2_1();
+//        method_do_2_1();
 
 //        method_do_2_2();//Hot Observable 如何转变成 Cold Observable
 
@@ -93,15 +96,44 @@ public class MainActivity2 extends AppCompatActivity {
 //        method_10_1$binxing2();
 
 
+        method_9_3$transformer();
 
 
     }
+
+    private void method_9_3$transformer() {
+        Observable.just(123, 456).compose(transformer()).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(@NonNull String s) throws Exception {
+                Log.i(TAG, "method_9_3$transformer:" + s);
+            }
+        });
+
+         new SingleScheduler();
+
+
+    }
+
+    public static <String> ObservableTransformer<Integer, java.lang.String> transformer() {
+        return new ObservableTransformer<Integer, java.lang.String>() {
+            @Override
+            public ObservableSource<java.lang.String> apply(Observable<Integer> upstream) {
+                return upstream.map(new Function<Integer, java.lang.String>() {
+                    @Override
+                    public java.lang.String apply(@NonNull Integer integer) throws Exception {
+                        return java.lang.String.valueOf(integer);
+                    }
+                });
+            }
+        };
+    }
+
 
     private void method_10_1$binxing2() {
         int threadNum = Runtime.getRuntime().availableProcessors() + 1;
         ExecutorService executor = Executors.newFixedThreadPool(threadNum);
         Scheduler scheduler = Schedulers.from(executor);
-        Observable.range(1,100).flatMap(new Function<Integer, ObservableSource<String>>() {
+        Observable.range(1, 100).flatMap(new Function<Integer, ObservableSource<String>>() {
             @Override
             public ObservableSource<String> apply(@NonNull Integer integer) throws Exception {
                 return Observable.just(integer).subscribeOn(scheduler).map(new Function<Integer, String>() {
@@ -196,7 +228,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void method_6_4$skipUtil() {
-        Observable.intervalRange(1, 9, 0, 1, TimeUnit.SECONDS)
+        Disposable subscribe = Observable.intervalRange(1, 9, 0, 1, TimeUnit.SECONDS)
                 .skipUntil(Observable.timer(4, TimeUnit.SECONDS))
                 .subscribe(new Consumer<Long>() {
                     @Override
@@ -209,6 +241,8 @@ public class MainActivity2 extends AppCompatActivity {
         } catch (Exception e) {
             e.getMessage();
         }
+
+//        new CompositeDisposable().add()
     }
 
     private void method_6_3$sequenceEqual() {
@@ -414,6 +448,31 @@ public class MainActivity2 extends AppCompatActivity {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
+
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+
+            }
+        }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(@NonNull Integer integer) throws Exception {
+
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+
+            }
+        }, new Action() {
+            @Override
+            public void run() throws Exception {
+
+            }
+        });
+
+
     }
 
     private void method_2_5$5() {
@@ -731,6 +790,12 @@ public class MainActivity2 extends AppCompatActivity {
 //
 //            }
 //        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }
 
